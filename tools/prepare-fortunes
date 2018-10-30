@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. tools/functions.sh
+
+for data in /usr/share/games/fortunes/{computers,cookie,definitions,people,songs-poems}.u8; do
+ fn=$(basename "$data" .u8 | tr -d '-')
+ #echo "$fn: `grep -x % $data | wc -l` entries" 1>&2
+ (echo %; cat "$data") |
+ sed '${;/^%$/d;}' |
+ sed "s/^%\$/&\\n$fn/"
+done |
+word_vectors % 255
+

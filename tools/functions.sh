@@ -38,7 +38,8 @@ word_vectors() {
  tokenise |
  indexise |
  tr \\012 \\011 |
- sed 's/^1\t//;s/\t1\t/\n/g' |
+ sed 's/^\(1\t\)*//;s/\t1\t/\n/g' |
+ sed 's/\t*$//' |
  padlength "$2"
 }
 
