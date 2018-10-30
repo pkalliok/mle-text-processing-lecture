@@ -1,6 +1,5 @@
 #!./myenv/bin/python
 
-import sys
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -29,19 +28,23 @@ def text_model(data, labels):
         metrics=['accuracy'])
     return model
 
-def train_model(model):
+def train_model(model, data, labels):
     model.fit(data, labels,
         batch_size=512,
         epochs=int(len(data)/100),
         validation_split=0.2)
 
-data, labels = load_data(sys.argv[1], sys.argv[2])
-report_data(data, labels)
-model = text_model(data, labels)
-train_model(model)
+def main(args):
+    data, labels = load_data(sys.argv[1], sys.argv[2])
+    report_data(data, labels)
+    model = text_model(data, labels)
+    train_model(model, data, labels)
+    print("Predictions:")
+    print(model.predict(data[:10]))
+    print("Actual labels:")
+    print(labels[:10])
 
-print("Predictions:")
-print(model.predict(data[:10]))
-print("Actual labels:")
-print(labels[:10])
+if __name__ == '__main__':
+    import sys
+    main(sys.argv)
 
