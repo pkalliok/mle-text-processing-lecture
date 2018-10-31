@@ -27,19 +27,35 @@ indexise() {
  awk '!trans[$0] {trans[$0]=++idx} {print trans[$0]}'
 }
 
+make_wordlist() {
+ freqs | head "-$1" | cut -c9-
+}
+
+indexise_with_wordlist() {
+ awk 'NR==FNR {trans[$0]=NR; next;} trans[$0] {print trans[$0]}' "$1" -
+}
+
 padlength() {
  cut "-f1-$1" |
  awk '{ pad=""; for (i = NF; i < '"$1"'; ++i) pad = pad "\t0"; print $0 pad; }'
 }
 
-word_vectors() {
+mark_record_separators() {
  ( echo "$1"; cat - ) |
- sed "s/^$1$/sEpR/" |
- tokenise |
- indexise |
+ sed "s/^$1\$/sEpR/"
+}
+
+recover_records() {
  tr \\012 \\011 |
  sed 's/^\(1\t\)*//;s/\t1\t/\n/g' |
- sed 's/\t*$//' |
+ sed 's/\t*$//'
+}
+
+word_vectors() {
+ mark_record_separators "$1" |
+ tokenise |
+ indexise |
+ recover_records |
  padlength "$2"
 }
 
