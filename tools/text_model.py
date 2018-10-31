@@ -43,13 +43,26 @@ def report_model(model):
     print("Actual labels:")
     print(labels[:10])
 
-def main(args):
-    data, labels = load_data(args[2], args[3])
+def learn(modelname, datafile, labelfile):
+    data, labels = load_data(datafile, labelfile)
     report_data(data, labels)
     model = text_model(data.max() + 1, labels.max() + 1)
-    maybe_load_weights(model, args[1])
+    maybe_load_weights(model, modelname)
     train_model(model, data, labels)
-    model.save_weights(args[1])
+    model.save_weights(modelname)
+
+def predict(): pass
+
+handlers={
+        'learn': learn,
+        'predict': predict,
+        }
+
+def main(args):
+    try: handlers[args[1]](*args[2:])
+    except KeyError:
+        print("No such action '{}', try one of: {}"
+                .format(args[1], tuple(handlers.keys())))
 
 if __name__ == '__main__':
     import sys
