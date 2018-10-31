@@ -31,27 +31,33 @@ def maybe_load_weights(model, checkpoint_name):
     try: model.load_weights(checkpoint_name)
     except NotFoundError: print("No old weights found, starting new model")
 
+def load_state(modelname, datafile, labelfile):
+    data, labels = load_data(datafile, labelfile)
+    report_data(data, labels)
+    model = text_model(data.max() + 1, labels.max() + 1)
+    maybe_load_weights(model, modelname)
+    return model, data, labels
+
 def train_model(model, data, labels):
     model.fit(data, labels,
         batch_size=512,
         epochs=int(len(data)/200),
         validation_split=0.2)
 
-def report_model(model):
+def report_model(model, data, labels):
     print("Predictions:")
     print(model.predict(data[:10]))
     print("Actual labels:")
     print(labels[:10])
 
 def learn(modelname, datafile, labelfile):
-    data, labels = load_data(datafile, labelfile)
-    report_data(data, labels)
-    model = text_model(data.max() + 1, labels.max() + 1)
-    maybe_load_weights(model, modelname)
+    model, data, labels = load_state(modelname, datafile, labelfile)
     train_model(model, data, labels)
     model.save_weights(modelname)
 
-def predict(): pass
+def predict(modelname, datafile, labelfile):
+    model, data, labels = load_state(modelname, datafile, labelfile)
+    report_model(model, data, labels)
 
 handlers={
         'learn': learn,
