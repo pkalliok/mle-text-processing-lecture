@@ -1,0 +1,5 @@
+#!/bin/sh
+
+curl -s -H 'Content-type: text/plain' \
+	-d "$*" http://localhost:7777
+
