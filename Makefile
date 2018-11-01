@@ -90,3 +90,11 @@ data/fortunes_model.bin: data/all_fortunes.txt
 	./tools/fasttext skipgram -epoch 60 \
 		-input "/$<" -output /data/fortunes_model
 
+data/dbpedia_words.txt: data/dbpedia_csv/train.csv
+	. tools/functions.sh && sed 's/^\([[:digit:]]*\),/__label__\1/' "$<" | \
+	sed G | mark_record_separators '' | tokenise_english | \
+	recover_records sEpR > "$@"
+
+data/words_model.bin: data/dbpedia_words.txt
+	./tools/fasttext skipgram -input "/$<" -output /data/words_model
+

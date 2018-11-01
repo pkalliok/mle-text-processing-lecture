@@ -23,6 +23,13 @@ tokenise() {
  grep -o '[[:alnum:]]\{1,\}'
 }
 
+tokenise_english() {
+ egrep -o "([do]')?[[:alnum:]_]+('[sd]|n't|'ve)?|([Ii]nc|[Ll]td|[Cc]o(rp)?|Mr|Dr|Ms|[[:upper:]])\\.|[;:,.?!'\"()]" |
+ awk '/^\.$/ { sentence=1; print; next; }
+      sentence { print tolower(substr($0,1,1)) substr($0,2); sentence=0; next; }
+      { print }'
+}
+
 indexise() {
  awk '!trans[$0] {trans[$0]=++idx} {print trans[$0]}'
 }
@@ -55,8 +62,10 @@ mark_record_separators() {
 }
 
 recover_records() {
- awk '/^1$/ && !started { next; }
-      /^1$/ { print record; record=""; next; }
+ SEPARATOR="$1"
+ test -z "$SEPARATOR" && SEPARATOR="1"
+ awk '/^'"$SEPARATOR"'$/ && !started { next; }
+      /^'"$SEPARATOR"'$/ { print record; record=""; next; }
       END { if (record) print record; }
       { started=1;
 	if (!record) record = $0;
