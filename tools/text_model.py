@@ -34,6 +34,11 @@ def maybe_load_weights(model, checkpoint_name):
 def load_state(modelname, datafile, labelfile):
     data, labels = load_data(datafile, labelfile)
     report_data(data, labels)
+    # WARNING: the text model is built on the shape of the data.  If you
+    # are updating the model with data that has a different shape
+    # (different number of labels and/or words), everything will go BOOM
+    # because load_weights only works when the model structure is
+    # exactly the same.
     model = text_model(data.max() + 1, labels.max() + 1)
     maybe_load_weights(model, modelname)
     return model, data, labels
