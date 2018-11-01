@@ -81,3 +81,12 @@ data/articles.index: ./tools/text_model.py stamps/configure-myenv \
 	"$<" learn data/articles data/articles_data.csv data/articles_labels.csv
 
 # Fasttext examples
+
+FASTTEXT = docker run -it --rm -v `pwd`/data:/data xebxeb/fasttext-docker ./fasttext
+
+data/all_fortunes.txt:
+	cat /usr/share/games/fortunes/*.u8 > "$@"
+
+data/fortunes_model.bin: data/all_fortunes.txt
+	$(FASTTEXT) skipgram -input "/$<" -output /data/fortunes_model
+
