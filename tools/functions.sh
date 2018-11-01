@@ -35,6 +35,12 @@ indexise_with_wordlist() {
  awk 'NR==FNR {trans[$0]=NR; next;} trans[$0] {print trans[$0]}' "$1" -
 }
 
+index_decode_with_wordlist() {
+ awk 'NR==FNR {trans[NR]=$0; next;}
+      trans[$0] {print trans[$0]; next; }
+      { print; }' "$1" -
+}
+
 padlength() {
  cut "-f1-$1" |
  awk '{ pad="";
