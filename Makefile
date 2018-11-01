@@ -1,9 +1,8 @@
 
 DATAFILES = data/fortunes_data.csv data/fortunes_labels.csv
 
-.PHONY: predict
-predict: ./tools/text_model.py data/fortunes.index
-	"$<" predict data/fortunes $(DATAFILES)
+.PHONY: all
+all: predict
 
 myenv:
 	python3 -m venv myenv
@@ -11,6 +10,8 @@ myenv:
 stamps/configure-myenv: requirements.txt myenv
 	./myenv/bin/pip install -r "$<"
 	touch $@
+
+# syntaxnet / parsey mcparseface rules
 
 stamps/run-parsey:
 	docker run -d --name parsey-mcparseface -p 7777:80 \
@@ -28,6 +29,8 @@ example-parse-text: stamps/run-parsey
 	./tools/parse-text How much wood would a woodchuck chuck, \
 		if a woodchuck would chuck wood?
 
+# Fortunes classification
+
 data/fortunes.csv: ./tools/prepare-fortunes
 	"$<" > "$@"
 
@@ -39,6 +42,12 @@ data/fortunes_labels.csv: data/fortunes.csv
 
 data/fortunes.index: ./tools/text_model.py stamps/configure-myenv $(DATAFILES)
 	"$<" learn data/fortunes $(DATAFILES)
+
+.PHONY: predict
+predict: ./tools/text_model.py data/fortunes.index
+	"$<" predict data/fortunes $(DATAFILES)
+
+# Wikipedia classification
 
 data/dbpedia_csv.tar.gz:
 	curl -o "$@" https://raw.githubusercontent.com/srhrshr/torchDatasets/master/dbpedia_csv.tar.gz
@@ -71,3 +80,4 @@ data/articles.index: ./tools/text_model.py stamps/configure-myenv \
 		data/articles_labels.csv data/articles_data.csv
 	"$<" learn data/articles data/articles_data.csv data/articles_labels.csv
 
+# Fasttext examples
