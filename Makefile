@@ -82,11 +82,11 @@ data/articles.index: ./tools/text_model.py stamps/configure-myenv \
 
 # Fasttext examples
 
-FASTTEXT = docker run -it --rm -v `pwd`/data:/data xebxeb/fasttext-docker ./fasttext
-
 data/all_fortunes.txt:
-	cat /usr/share/games/fortunes/*.u8 > "$@"
+	for f in /usr/share/games/fortunes/*.u8; do \
+		echo "__label__`basename $$f .u8`"; cat "$$f"; done > "$@"
 
 data/fortunes_model.bin: data/all_fortunes.txt
-	$(FASTTEXT) skipgram -input "/$<" -output /data/fortunes_model
+	./tools/fasttext skipgram -epoch 60 \
+		-input "/$<" -output /data/fortunes_model
 

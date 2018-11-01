@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker run -i --rm -v `pwd`/data:/data xebxeb/fasttext-docker ./fasttext "$@"
