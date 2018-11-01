@@ -1,5 +1,6 @@
 #!./myenv/bin/python
 
+from math import sqrt
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -46,7 +47,7 @@ def load_state(modelname, datafile, labelfile):
 def train_model(model, data, labels):
     model.fit(data, labels,
         batch_size=512,
-        epochs=int(len(data)/200),
+        epochs=int(4000/sqrt(len(data))),
         validation_split=0.2)
 
 def report_model(model, data, labels):

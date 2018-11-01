@@ -37,7 +37,10 @@ indexise_with_wordlist() {
 
 padlength() {
  cut "-f1-$1" |
- awk '{ pad=""; for (i = NF; i < '"$1"'; ++i) pad = pad "\t0"; print $0 pad; }'
+ awk '{ pad="";
+	if (!$0) $0 = "0";
+	for (i = NF; i < '"$1"'; ++i) pad = pad "\t0";
+	print $0 pad; }'
 }
 
 mark_record_separators() {

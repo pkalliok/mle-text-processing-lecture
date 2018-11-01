@@ -67,3 +67,7 @@ data/articles_data.csv: data/dbpedia_csv/train.csv data/articles.bigrams
 	tokenise | bigrams | indexise_with_wordlist data/articles.bigrams | \
 	recover_records | padlength 30 > "$@"
 
+data/articles.index: ./tools/text_model.py stamps/configure-myenv \
+		data/articles_labels.csv data/articles_data.csv
+	"$<" learn data/articles data/articles_data.csv data/articles_labels.csv
+
