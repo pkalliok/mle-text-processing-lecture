@@ -46,9 +46,12 @@ mark_record_separators() {
 }
 
 recover_records() {
- tr \\012 \\011 |
- sed 's/^\(1\t\)*//;s/\t1\t/\n/g' |
- sed 's/\t*$//'
+ awk '/^1$/ && !started { next; }
+      /^1$/ { print record; record=""; next; }
+      END { if (record) print record; }
+      { started=1;
+	if (!record) record = $0;
+	else record = record "\t" $0; }'
 }
 
 word_vectors() {

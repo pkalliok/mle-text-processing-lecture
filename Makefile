@@ -56,7 +56,7 @@ data/dbpedia_csv/test.csv: data/dbpedia_csv
 data/articles.bigrams: data/dbpedia_csv/train.csv data/dbpedia_csv/test.csv
 	(echo 'sEpR sEpR'; \
 	. tools/functions.sh && cut -d, -f2- $^ | \
-	tokenise | bigrams | make_wordlist 12000) > "$@"
+	tokenise | bigrams | make_wordlist 20000) > "$@"
 
 data/articles_labels.csv: data/dbpedia_csv/train.csv
 	cut -d, -f1 "$<" > "$@"
