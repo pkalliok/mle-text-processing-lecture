@@ -1,0 +1,13 @@
+#!/bin/sh
+
+WHERE=`dirname $0`
+. $WHERE/functions.sh
+
+tokenise |
+bigrams |
+indexise_with_wordlist data/articles.bigrams |
+recover_records |
+tee /dev/stderr |
+padlength 30 |
+$WHERE/text_model.py classify data/articles 20001 5
+

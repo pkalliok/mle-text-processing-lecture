@@ -65,14 +65,21 @@ def predict(modelname, datafile, labelfile):
     model, data, labels = load_state(modelname, datafile, labelfile)
     report_model(model, data, labels)
 
-def classify(modelname, nwords, ncat):
-    pass
+def read_sample_from_stdin():
+    return np.array([int(w) for w in input("> ").split()], ndmin=2)
 
-handlers={
-        'learn': learn,
-        'show-predictions': predict,
-        'classify': classify,
-        }
+def classify(modelname, nwords, ncat):
+    model = text_model(int(nwords) + 1, int(ncat))
+    maybe_load_weights(model, modelname)
+    sample = read_sample_from_stdin()
+    print("Probabilities of categories:")
+    print(model.predict(sample))
+
+handlers = {
+    'learn': learn,
+    'show-predictions': predict,
+    'classify': classify,
+}
 
 def main(args):
     try: handlers[args[1]](*args[2:])
