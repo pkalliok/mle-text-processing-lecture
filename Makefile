@@ -45,7 +45,7 @@ data/fortunes.index: ./tools/text_model.py stamps/configure-myenv $(DATAFILES)
 
 .PHONY: predict
 predict: ./tools/text_model.py data/fortunes.index
-	"$<" predict data/fortunes $(DATAFILES)
+	"$<" show-predictions data/fortunes $(DATAFILES)
 
 # Wikipedia classification
 

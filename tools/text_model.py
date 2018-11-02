@@ -65,9 +65,13 @@ def predict(modelname, datafile, labelfile):
     model, data, labels = load_state(modelname, datafile, labelfile)
     report_model(model, data, labels)
 
+def classify(modelname, nwords, ncat):
+    pass
+
 handlers={
         'learn': learn,
-        'predict': predict,
+        'show-predictions': predict,
+        'classify': classify,
         }
 
 def main(args):
